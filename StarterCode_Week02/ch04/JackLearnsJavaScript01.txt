@@ -1,0 +1,688 @@
+Jack Learns JavaScript -- 
+--------------------------------
+2014.02.10  from  http://www.w3schools.com/js/ 
+
+
+HTML 5 button: push to display date:
+--------------------------------------
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First JavaScript</h1>
+<p>Click the button to display the date.</p>
+<p id="demo"></p>
+
+<button type="button" onclick="myFunction()">Try it</button>
+
+<script>
+function myFunction()
+{
+document.getElementById("demo").innerHTML = Date();
+}
+</script>
+
+</body>
+</html> 
+--------------------------------------
+
+JavaScript Objects
+-------------------
+An object is delimited by curly braces. Inside the braces the object's properties are defined as name and value pairs (name : value). The properties are separated by commas:
+
+var person={firstname:"John", lastname:"Doe", id:5566};
+The object (person) in the example above has 3 properties: firstname, lastname, and id.
+
+Spaces and line breaks are not important. Your declaration can span multiple lines:
+
+var person={
+firstname : "John",
+lastname  : "Doe",
+id        :  5566
+};
+
+
+--------------------------------------
+Undefined and Null
+-------------------
+Undefined is the value of a variable with no value.
+
+Variables can be emptied by setting the value to null;
+
+Example
+
+cars=null;
+person=null;
+--------------------------------------
+Declaring Variables as Objects
+-------------------
+When a variable is declared with the keyword "new", the variable is declared as an object:
+
+var name = new String;
+var x =    new Number;
+var y =    new Boolean;
+--------------------------------------
+Objects in JavaScript:
+-------------------
+In JavaScript, objects are data (variables), with properties and methods.
+
+You create a JavaScript String object when you declare a string variable like this:
+
+var txt = new String("Hello World");
+ String objects have built-in properties and methods:
+
+Object	 Property	 Method
+"Hello World"	 txt.length 
+txt.indexOf("World")
+The string object above has a length property of 11, and the indexOf("World") method will return 6.
+--------------------------------------
+Creating JavaScript Objects
+-------------------
+Almost "everything" in JavaScript can be objects. Strings, Dates, Arrays, Functions....
+
+You can also create your own objects.
+
+This example creates an object called "person", and adds four properties to it:
+
+Example
+
+person=new Object();
+person.firstname="John";
+person.lastname="Doe";
+person.age=50;
+person.eyecolor="blue";
+
+There are many different ways to create new JavaScript objects, and you can also add new properties and methods to already existing objects.
+
+You will learn much more about this in a later chapter of this tutorial.
+--------------------------------------
+Accessing Object Properties
+-------------------
+The syntax for accessing the property of an object is:
+
+objectName.propertyName
+This example uses the length property of the String object to find the length of a string:
+
+var message="Hello World!";
+var x=message.length;
+The value of x, after execution of the code above will be:
+
+12
+--------------------------------------
+Accessing Object Methods
+You can call a method with the following syntax:
+
+objectName.methodName()
+This example uses the toUpperCase() method of the String object, to convert a text to uppercase:
+
+var message="Hello world!";
+var x=message.toUpperCase();
+The value of x, after execution of the code above will be:
+
+HELLO WORLD!
+--------------------------------------
+Local JavaScript Variables
+A variable declared (using var) within a JavaScript function becomes LOCAL and can only be accessed from within that function. (the variable has local scope).
+
+You can have local variables with the same name in different functions, because local variables are only recognized by the function in which they are declared.
+
+Local variables are deleted as soon as the function is completed.
+
+Global JavaScript Variables
+Variables declared outside a function, become GLOBAL, and all scripts and functions on the web page can access it.
+
+The Lifetime of JavaScript Variables
+The lifetime of JavaScript variables starts when they are declared.
+
+Local variables are deleted when the function is completed.
+
+Global variables are deleted when you close the page.
+
+
+--------------------------------------
+Adding Strings and Numbers
+Adding two numbers, will return the sum, but adding a number and a string will return a string:
+
+Example
+
+x=5+5;
+y="5"+5;
+z="Hello"+5;
+The result of x,y, and z will be:
+
+10
+55
+Hello5
+
+Try it yourself »
+The rule is: If you add a number and a string, the result will be a string!
+--------------------------------------
+JavaScript Throws Errors
+--------------------------
+When an error occurs, when something goes wrong, the JavaScript engine will normally stop, and generate an error message.
+
+The technical term for this is: JavaScript will throw an error.
+
+JavaScript try and catch
+------------------------
+The try statement allows you to define a block of code to be tested for errors while it is being executed.
+
+The catch statement allows you to define a block of code to be executed, if an error occurs in the try block.
+
+The JavaScript statements try and catch come in pairs.
+
+Syntax
+------------
+try
+  {
+  //Run some code here
+  }
+catch(err)
+  {
+  //Handle errors here
+  }
+
+In the example below we have deliberately made a typo in the code in the try block.
+
+The catch block catches the error in the try block, and executes code to handle it:
+
+Example
+---------------------------
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+var txt="";
+function message()
+{
+try
+  {
+  adddlert("Welcome guest!");
+  }
+catch(err)
+  {
+  txt="There was an error on this page.\n\n";
+  txt+="Error description: " + err.message + "\n\n";
+  txt+="Click OK to continue.\n\n";
+  alert(txt);
+  }
+}
+</script>
+</head>
+
+<body>
+<input type="button" value="View message" onclick="message()">
+</body>
+
+</html>
+
+Try it yourself »
+--------------------
+The Throw Statement
+The throw statement allows you to create a custom error.
+
+The correct technical term is to create or throw an exception.
+
+If you use the throw statement together with try and catch, you can control program flow and generate custom error messages.
+
+Syntax
+
+throw exception
+The exception can be a JavaScript String, a Number, a Boolean or an Object.
+
+Example
+This example examines the value of an input variable. If the value is wrong, an exception (error) is thrown. The error is caught by the catch statement and a custom error message is displayed:
+
+Example
+--------------------
+<script>
+function myFunction()
+{
+var y=document.getElementById("mess");
+y.innerHTML="";
+try
+  { 
+  var x=document.getElementById("demo").value;
+  if(x=="")    throw "empty";
+  if(isNaN(x)) throw "not a number";
+  if(x>10)     throw "too high";
+  if(x<5)      throw "too low";
+  }
+catch(err)
+  {
+  y.innerHTML="Error: " + err + ".";
+  }
+}
+</script>
+
+<h1>My First JavaScript</h1>
+<p>Please input a number between 5 and 10:</p>
+<input id="demo" type="text">
+<button type="button" onclick="myFunction()">Test Input</button>
+<p id="mess"></p>
+
+Try it yourself »
+Note that the example above will also throw an error if the getElementById function fails.
+--------------------------------------
+JavaScript Form Validation
+---------------------------
+JavaScript can be used to validate data in HTML forms before sending off the content to a server.
+
+Form data that typically are checked by a JavaScript could be:
+
+has the user left required fields empty?
+has the user entered a valid e-mail address?
+has the user entered a valid date?
+has the user entered text in a numeric field?
+Required Fields
+The function below checks if a field has been left empty. If the field is blank, an alert box alerts a message, the function returns false, and the form will not be submitted:
+
+function validateForm()
+{
+var x=document.forms["myForm"]["fname"].value;
+if (x==null || x=="")
+  {
+  alert("First name must be filled out");
+  return false;
+  }
+}
+The function above could be called when a form is submitted:
+
+Example
+
+<form name="myForm" action="demo_form.asp" onsubmit="return validateForm()" method="post">
+First name: <input type="text" name="fname">
+<input type="submit" value="Submit">
+</form>
+
+Try it yourself »
+
+E-mail Validation
+-=-------------------
+The function below checks if the content has the general syntax of an email.
+
+This means that the input data must contain an @ sign and at least one dot (.). Also, the @ must not be the first character of the email address, and the last dot must be present after the @ sign, and minimum 2 characters before the end:
+
+function validateForm()
+{
+var x=document.forms["myForm"]["email"].value;
+var atpos=x.indexOf("@");
+var dotpos=x.lastIndexOf(".");
+if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+  {
+  alert("Not a valid e-mail address");
+  return false;
+  }
+}
+The function above could be called when a form is submitted:
+
+Example
+
+<form name="myForm" action="demo_form.asp" onsubmit="return validateForm();" method="post">
+Email: <input type="text" name="email">
+<input type="submit" value="Submit">
+</form>
+--------------------------------------
+IMPORTANT: ADVANCED JS OBJECTS: http://www.w3schools.com/js/js_objects.asp
+--------------------------------
+JavaScript Objects
+
+« PreviousNext Chapter »
+"Everything" in JavaScript is an Object.
+
+In addition, JavaScript allows you to define your own objects.
+
+Everything is an Object
+In JavaScript almost everything is an object. Even primitive datatypes (except null and undefined) can be treated as objects.
+
+Booleans can be objects or primitive data treated as objects
+Numbers can be objects or primitive data treated as objects
+Strings are also objects or primitive data treated as objects
+Dates are always objects
+Maths and Regular Expressions are always objects
+Arrays are always objects
+Even functions are always objects
+JavaScript Objects
+An object is just a special kind of data, with properties and methods.
+
+Accessing Object Properties
+Properties are the values associated with an object.
+
+The syntax for accessing the property of an object is:
+
+objectName.propertyName
+This example uses the length property of the String object to find the length of a string:
+
+var message="Hello World!";
+var x=message.length;
+The value of x, after execution of the code above will be:
+
+12
+
+Accessing Objects Methods
+Methods are the actions that can be performed on objects.
+
+You can call a method with the following syntax:
+
+objectName.methodName()
+This example uses the toUpperCase() method of the String object, to convert a text to uppercase:
+
+var message="Hello world!";
+var x=message.toUpperCase();
+The value of x, after execution of the code above will be:
+
+HELLO WORLD!
+
+Creating JavaScript Objects
+With JavaScript you can define and create your own objects.
+
+There are 2 different ways to create a new object:
+
+1. Define and create a direct instance of an object.
+2. Use a function to define an object, then create new object instances.
+
+--------------------------------------
+Creating a Direct Instance
+---------------------------
+The following example creates a new instance of an object, and adds four properties to it:
+
+Example
+
+person=new Object();
+person.firstname="John";
+person.lastname="Doe";
+person.age=50;
+person.eyecolor="blue";
+
+Alternative syntax (using object literals):
+
+person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
+--------------------------------------
+Using an Object Constructor
+----------------------------
+The following example uses a function to construct the object:
+
+Example
+
+function person(firstname,lastname,age,eyecolor)
+{
+this.firstname=firstname;
+this.lastname=lastname;
+this.age=age;
+this.eyecolor=eyecolor;
+}
+The reason for all the "this" stuff is that you're going to have more than one person at a time (which person you're dealing with must be clear). That's what "this" is: the instance of the object at hand.
+
+Once you have a object constructor, you can create new instances of the object, like this:
+
+var myFather=new person("John","Doe",50,"blue");
+var myMother=new person("Sally","Rally",48,"green");
+
+--------------------------------------
+Adding Properties to JavaScript Objects
+-------------------------
+You can add new properties to an existing object by simply giving it a value.
+
+Assume that the person object already exists - you can then give it new properties:
+
+person.nationality="English";
+
+x=person.nationality;
+The value of x, after execution of the code above will be:
+
+English
+--------------------------------------
+Adding Methods to JavaScript Objects
+------------------------
+Methods are just functions attached to objects.
+
+Defining methods to an object is done inside the constructor function:
+
+function person(firstname,lastname,age,eyecolor)
+{
+this.firstname=firstname;
+this.lastname=lastname;
+this.age=age;
+this.eyecolor=eyecolor;
+
+this.changeName=changeName;
+function changeName(name)
+{
+this.lastname=name;
+}
+}
+The changeName() function assigns the value of name to the person's lastname property.
+
+Now You Can Try:
+
+myMother.changeName("Doe");
+
+--------------------------------------
+JavaScript Classes? NO!--'Prototypes'
+----------------------
+JavaScript is an object oriented language, but JavaScript does not use classes.
+
+In JavaScript you don't define classes and create objects from these classes (as in most other object oriented languages).
+
+JavaScript is prototype based, not class based.
+
+--------------------------------------
+JavaScript for...in Loop
+------------------------
+The JavaScript for...in statement loops through the properties of an object.
+
+Syntax
+
+for (variable in object)
+  {
+  code to be executed
+  }
+Note: The block of code inside of the for...in loop will be executed once for each property.
+
+Example
+
+Looping through the properties of an object:
+
+Example
+
+var person={fname:"John",lname:"Doe",age:25}; 
+
+for (x in person)
+  {
+  txt=txt + person[x];
+  }
+--------------------------------------
+JavaScript Numbers
+---------------------
+JavaScript numbers can be written with, or without decimals:
+Example
+
+var pi=3.14;    // A number written with decimals
+var x=34;       // A number written without decimals
+Extra large or extra small numbers can be written with scientific (exponent) notation:
+
+Example
+
+var y=123e5;    // 12300000
+var z=123e-5;   // 0.00123
+
+JavaScript Numbers are 64-bit Floating Point
+--------------------------------------------
+JavaScript is not a typed language. Unlike many other programming languages, it does not define different types of numbers, like integers, short, long, floating-point etc.
+
+JavaScript numbers are always stored as double precision floating point numbers, following the international IEEE 754 standard. 
+
+This format stores numbers in 64 bits, where the number (the fraction) is stored in bits 0 to 51, the exponent in bits 52 to 62, and the sign in bit 63:
+
+Value (aka Fraction/Mantissa)	Exponent	Sign
+52 bits (0 - 51) 	11 bits (52 - 62)	1 bit (63)
+
+Precision
+-------------
+Integers (numbers without a period or exponent notation) are considered accurate up to 15 digits.
+
+The maximum number of decimals is 17, but floating point arithmetic is not always 100% accurate:
+
+Example
+
+var x = 0.2+0.1; // result will be 0.30000000000000004
+
+--------------------------------------
+Octal and Hexadecimal
+-------------------------
+JavaScript interprets numeric constants as octal if they are preceded by a zero, and as hexadecimal if they are preceded by a zero and "x".
+
+Example
+
+var y = 0377; 
+var z = 0xFF;
+
+Note Never write a number with a leading zero, unless you want an octal conversion. 
+By default, Javascript displays numbers as base 10 decimals.
+
+But you can use the toString() method to output numbers as base 16 (hex), base 8 (octal), or base 2 (binary).
+
+Example
+
+var myNumber=128;
+myNumber.toString(16);   // returns 80
+myNumber.toString(8);    // returns 200
+myNumber.toString(2);    // returns 10000000
+
+
+Infinity
+-------------
+If you calculate a number outside the largest number provided by Javascript, Javascript will return the value of Infinity or -Infinity (positive or negative overflow):
+
+Example
+
+myNumber=2;
+while (myNumber!=Infinity)
+{
+myNumber=myNumber*myNumber; // Calculate until Infinity
+}
+
+Try it yourself »
+Division by 0 (zero) also generates Infinity:
+
+Example
+
+var x = 2/0;
+var y = -2/0;
+
+Try it yourself »
+
+Note	 Note: Infinity is a number (typeof(Infinity) returns a number). 
+--------------------------------------
+NaN - Not a Number
+NaN is JavaScript reserved word indicating that the result of a numeric operation was not a number.
+
+You can use the global JavaScript function isNaN(value) to find out if a value is a number.
+
+Example
+
+var x = 1000 / "Apple";
+isNaN(x); // returns true
+var y = 100 / "1000";
+isNaN(y); // returns false
+
+Try it yourself »
+Division by 0 (zero) generates Infinity, but Infinity is a number:
+
+Example
+
+var x = 1000 / 0;
+isNaN(x); // returns false
+--------------------------------------
+Numbers Can be Numbers or Objects
+-----------------------------------
+JavaScript numbers can be primitive values created from literals, like var x = 123;
+
+JavaScript number can also be objects created with the new keyword, like var y = new Number(123);
+
+Example
+
+var x = 123;
+var y = new Number(123);
+typeof(x) // returns Number
+typeof(y) // returns Object
+
+Normally, because of some nasty side effects, 
+you will not define numbers as objects.
+---------------------------------------
+Example
+
+var x = 123;              
+var y = new Number(123);
+(x === y) // is false because x is a number and y is an object.
+--------------------------------------
+Number Properties
+----------------------
+MAX_VALUE
+MIN_VALUE
+NEGATIVE_INFINITY
+POSITIVE_INFINITY
+NaN
+prototype
+constructor
+All number properties are properties of JavaScripts' number object wrapper called Number.
+
+These properties can only be accessed as Number.MAX_VALUE.
+
+Using num.MAX_VALUE, where num is a created object or a primitive number value, will return undefined.
+--------------------------------------
+Number Methods
+toExponential()
+toFixed()
+toPrecision()        <-- (TO FIX ANNOYING 15-digit xMdragTot display.)
+toString()
+valueOf()
+Note: Primitive values, like 3.14, cannot have properties and methods (because they are not objects).
+
+With JavaScript, all methods of the number object are also available to primitive values, because Javascript will temporarily transfer primitive values to objects before executing the methods.
+--------------------------------------
+
+ SKIP arrays: http://www.w3schools.com/js/js_obj_array.asp 
+
+--------------------------------------
+
+  SKIP boolean objects: http://www.w3schools.com/js/js_obj_boolean.asp
+
+--------------------------------------
+
+  SKIP math objects: http://www.w3schools.com/js/js_obj_math.asp
+Math.E
+Math.PI
+Math.SQRT2
+Math.SQRT1_2
+Math.LN2
+Math.LN10
+Math.LOG2E
+Math.LOG10E
+--------------------------------------
+
+  SKIP RegExp objects (filename parsing!!)
+   http://www.w3schools.com/js/js_obj_regexp.asp
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
+--------------------------------------
