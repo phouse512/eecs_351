@@ -169,7 +169,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
   						// we moved upwards (+y) measured in prev. drawing axes.
   modelMatrix.scale(0.6,0.6,0.6);				// Make new drawing axes that
   						// are smaller that the previous drawing axes by 0.6.
-  modelMatrix.rotate(currentAngle*0.8, 0,0,1);	// Make new drawing axes that
+  modelMatrix.rotate(0, 0,0,1);	// Make new drawing axes that
   						// spin around Z axis (0,0,1) of the previous drawing 
   						// axes, using the same origin.
   modelMatrix.translate(-0.2, 0, 0);			// Make new drawing axes that
@@ -183,7 +183,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
   gl.drawArrays(gl.TRIANGLES, 0, n);
  
   //-------Draw lower jaw of robot pincer----------------
-	modelMatrix.translate(0.1, 0.5, 0.0);	// Make new drawing axes at 
+	modelMatrix.translate(2.00, 0.5, 0.0);	// Make new drawing axes at 
 						  // center top of upper arm.
 	
 	// SAVE CURRENT DRAWING AXES HERE--------------------------
@@ -195,7 +195,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
 	//----------------------------------------------------------
 
 	
-	modelMatrix.rotate(-15.0 +0.5* currentAngle, 0,0,1);		
+	modelMatrix.rotate(0, 0,0,1);		
 						// make new drawing axes that rotate for lower-jaw
 	modelMatrix.scale(0.4, 0.4, 0.4);		// Make new drawing axes that
 						// have size of just 40% of previous drawing axes,

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ColoredMulti-Object</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="500" height="500">
+    Please use a browser that supports "canvas"
+    </canvas>
+    <p>
+      <h1 id="Result">You are on Earth!</h1>
+      <h3>To go to space, press and hold your space bar!</h3>
+
+		<! these commands create a push-button withlabels ++ CCW and -- CCW.
+			When users click the button, call the function name held in 'onclick'>
+    </p>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix-mod.js"></script>
+    <script src="ColoredMultiObject.js"></script>
+  </body>
+</html>
