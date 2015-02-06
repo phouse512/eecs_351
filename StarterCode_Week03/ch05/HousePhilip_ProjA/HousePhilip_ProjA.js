@@ -42,6 +42,9 @@ var floatsPerVertex = 7;
 var translate = 0;
 var press = false; 
 
+var xMdragTot = 0;
+var yMdragTot = 0;
+
 function main() {
 //==============================================================================
   // Retrieve <canvas> element
@@ -67,8 +70,14 @@ function main() {
     return;
   }
 
+  canvas.onmousedown  = function(ev){myMouseDown( ev, gl, canvas) }; 
+  
+            // when user's mouse button goes down call mouseDown() function
+  canvas.onmousemove =  function(ev){myMouseMove( ev, gl, canvas) };
+  
+                      // call mouseMove() function          
+  canvas.onmouseup =    function(ev){myMouseUp(   ev, gl, canvas)};
 
-            
   // Next, register all keyboard events found within our HTML webpage window:
   window.addEventListener("keydown", myKeyDown, false);
   window.addEventListener("keyup", myKeyUp, false);
@@ -120,8 +129,7 @@ function initVertexBuffer(gl) {
 //==============================================================================
 	var c30 = Math.sqrt(0.75);					// == cos(30deg) == sqrt(3) / 2
 	var sq2	= Math.sqrt(2.0);
-
-  makeTorus();				 
+			 
 
   var colorShapes = new Float32Array([
   // Vertex coordinates(x,y,z,w) and color (R,G,B) for a color tetrahedron:
@@ -315,10 +323,8 @@ function initVertexBuffer(gl) {
 
 
   ]);
-  var nn = 102 + (torVerts.length/7);		// 12 tetrahedron vertices; 36 cube verts (6 per side*6 sides); 18 vertices
-	console.log(torVerts.length/7);
-  i = 102*7;
-  console.log(colorShapes);
+  var nn = 102;		// 12 tetrahedron vertices; 36 cube verts (6 per side*6 sides); 18 vertices
+
   //for(j=0; j< torVerts.length; i++, j++) {
     //console.log(colorShapes[i]);
     //console.log(torVerts[j]);
@@ -328,7 +334,7 @@ function initVertexBuffer(gl) {
   console.log(colorShapes);
   console.log(colorShapes.length);
 
-
+  //console.log(Math.sin(21));
 	
   // Create a buffer object
   var shapeBufferHandle = gl.createBuffer();  
@@ -397,7 +403,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   //-------Draw Spinning Tetrahedron
-  modelMatrix.setTranslate(0,0, 0);  // 'set' means DISCARD old matrix,
+  modelMatrix.setTranslate(xMdragTot,0, 0);  // 'set' means DISCARD old matrix,
   						// (drawing axes centered in CVV), and then make new
   						// drawing axes moved to the lower-left corner of CVV. 
   modelMatrix.scale(1,1,-1);							// convert to left-handed coord sys
@@ -417,7 +423,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
   //gl.drawArrays(gl.TRIANGLES, 0, 12);
   
   // NEXT, create different drawing axes, and...
-  modelMatrix.translate(0.4, translate, 0.0);  // 'set' means DISCARD old matrix,
+  modelMatrix.translate(0, translate, 0.0);  // 'set' means DISCARD old matrix,
   						// (drawing axes centered in CVV), and then make new
   						// drawing axes moved to the lower-left corner of CVV.
   modelMatrix.scale(1,1,-1);							// convert to left-handed coord sys
@@ -445,6 +451,29 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
   gl.drawArrays(gl.TRIANGLES, 66, 24)
 
+  modelMatrix.translate(0, 2, 0);
+
+  modelMatrix.scale(.3,.3,.3);
+  modelMatrix.rotate(currentAngle, 1, 0, 0);
+
+  if (currentAngle > 180) {
+    rotateAngle = 360 - currentAngle;
+  } else {
+    rotateAngle = currentAngle;
+  }
+
+  //modelMatrix.translate((rotateAngle/90)*8, 0, (rotateAngle/90)*8);
+  modelMatrix.translate(4, 4, 0);
+  modelMatrix.translate(-3, (1 - Math.cos(rotateAngle/90))* 10, (1 - Math.cos(rotateAngle/90)) * 10);
+  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+  gl.drawArrays(gl.TRIANGLES, 12, 36);
+
+
+  modelMatrix.scale(.5, .5, .5);
+  modelMatrix.rotate(currentAngle, 0, 1, 0);
+  //modelMatrix.translate(.5, .5, .);
+  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+  gl.drawArrays(gl.TRIANGLES, 12, 36);
 
 
  // gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
@@ -515,114 +544,7 @@ function runStop() {
   }
 }
 
-function makeTorus() {
-  //==============================================================================
-  //    Create a torus centered at the origin that circles the z axis.  
-  // Terminology: imagine a torus as a flexible, cylinder-shaped bar or rod bent 
-  // into a circle around the z-axis. The bent bar's centerline forms a circle
-  // entirely in the z=0 plane, centered at the origin, with radius 'rbend'.  The 
-  // bent-bar circle begins at (rbend,0,0), increases in +y direction to circle  
-  // around the z-axis in counter-clockwise (CCW) direction, consistent with our
-  // right-handed coordinate system.
-  //    This bent bar forms a torus because the bar itself has a circular cross-
-  // section with radius 'rbar' and angle 'phi'. We measure phi in CCW direction 
-  // around the bar's centerline, circling right-handed along the direction 
-  // forward from the bar's start at theta=0 towards its end at theta=2PI.
-  //    THUS theta=0, phi=0 selects the torus surface point (rbend+rbar,0,0);
-  // a slight increase in phi moves that point in -z direction and a slight
-  // increase in theta moves that point in the +y direction.  
-  // To construct the torus, begin with the circle at the start of the bar:
-  //          xc = rbend + rbar*cos(phi); 
-  //          yc = 0; 
-  //          zc = -rbar*sin(phi);      (note negative sin(); right-handed phi)
-  // and then rotate this circle around the z-axis by angle theta:
-  //          x = xc*cos(theta) - yc*sin(theta)   
-  //          y = xc*sin(theta) + yc*cos(theta)
-  //          z = zc
-  // Simplify: yc==0, so
-  //          x = (rbend + rbar*cos(phi))*cos(theta)
-  //          y = (rbend + rbar*cos(phi))*sin(theta) 
-  //          z = -rbar*sin(phi)
-  // To construct a torus from a single triangle-strip, make a 'stepped spiral' along the length of the bent bar; successive rings of constant-theta, using the same design used for cylinder walls in 'makeCyl()' and for 'slices' in makeSphere().  Unlike the cylinder and sphere, we have no 'special case' for the first and last of these bar-encircling rings.
-  //
-  var rbend = 1.0;                    // Radius of circle formed by torus' bent bar
-  var rbar = 0.5;                     // radius of the bar we bent to form torus
-  var barSlices = 75;                 // # of bar-segments in the torus: >=3 req'd;
-                                      // more segments for more-circular torus
-  var barSides = 13;                    // # of sides of the bar (and thus the 
-                                      // number of vertices in its cross-section)
-                                      // >=3 req'd;
-                                      // more sides for more-circular cross-section
-  // for nice-looking torus with approx square facets, 
-  //      --choose odd or prime#  for barSides, and
-  //      --choose pdd or prime# for barSlices of approx. barSides *(rbend/rbar)
-  // EXAMPLE: rbend = 1, rbar = 0.5, barSlices =23, barSides = 11.
 
-    // Create a (global) array to hold this torus's vertices:
-   torVerts = new Float32Array(floatsPerVertex*(2*barSides*barSlices +2));
-  //  Each slice requires 2*barSides vertices, but 1st slice will skip its first 
-  // triangle and last slice will skip its last triangle. To 'close' the torus,
-  // repeat the first 2 vertices at the end of the triangle-strip.  Assume 7
-
-  var phi=0, theta=0;                   // begin torus at angles 0,0
-  var thetaStep = 2*Math.PI/barSlices;  // theta angle between each bar segment
-  var phiHalfStep = Math.PI/barSides;   // half-phi angle between each side of bar
-                                        // (WHY HALF? 2 vertices per step in phi)
-    // s counts slices of the bar; v counts vertices within one slice; j counts
-    // array elements (Float32) (vertices*#attribs/vertex) put in torVerts array.
-    for(s=0,j=0; s<barSlices; s++) {    // for each 'slice' or 'ring' of the torus:
-      for(v=0; v< 2*barSides; v++, j+=7) {    // for each vertex in this slice:
-        if(v%2==0)  { // even #'d vertices at bottom of slice,
-          torVerts[j  ] = (rbend + rbar*Math.cos((v)*phiHalfStep)) * 
-                                               Math.cos((s)*thetaStep);
-                  //  x = (rbend + rbar*cos(phi)) * cos(theta)
-          torVerts[j+1] = (rbend + rbar*Math.cos((v)*phiHalfStep)) *
-                                               Math.sin((s)*thetaStep);
-                  //  y = (rbend + rbar*cos(phi)) * sin(theta) 
-          torVerts[j+2] = -rbar*Math.sin((v)*phiHalfStep);
-                  //  z = -rbar  *   sin(phi)
-          torVerts[j+3] = 1.0;    // w
-        }
-        else {        // odd #'d vertices at top of slice (s+1);
-                      // at same phi used at bottom of slice (v-1)
-          torVerts[j  ] = (rbend + rbar*Math.cos((v-1)*phiHalfStep)) * 
-                                               Math.cos((s+1)*thetaStep);
-                  //  x = (rbend + rbar*cos(phi)) * cos(theta)
-          torVerts[j+1] = (rbend + rbar*Math.cos((v-1)*phiHalfStep)) *
-                                               Math.sin((s+1)*thetaStep);
-                  //  y = (rbend + rbar*cos(phi)) * sin(theta) 
-          torVerts[j+2] = -rbar*Math.sin((v-1)*phiHalfStep);
-                  //  z = -rbar  *   sin(phi)
-          torVerts[j+3] = 1.0;    // w
-        }
-        torVerts[j+4] = Math.random();    // random color 0.0 <= R < 1.0
-        torVerts[j+5] = Math.random();    // random color 0.0 <= G < 1.0
-        torVerts[j+6] = Math.random();    // random color 0.0 <= B < 1.0
-      }
-    }
-    // Repeat the 1st 2 vertices of the triangle strip to complete the torus:
-        torVerts[j  ] = rbend + rbar; // copy vertex zero;
-                //  x = (rbend + rbar*cos(phi==0)) * cos(theta==0)
-        torVerts[j+1] = 0.0;
-                //  y = (rbend + rbar*cos(phi==0)) * sin(theta==0) 
-        torVerts[j+2] = 0.0;
-                //  z = -rbar  *   sin(phi==0)
-        torVerts[j+3] = 1.0;    // w
-        torVerts[j+4] = Math.random();    // random color 0.0 <= R < 1.0
-        torVerts[j+5] = Math.random();    // random color 0.0 <= G < 1.0
-        torVerts[j+6] = Math.random();    // random color 0.0 <= B < 1.0
-        j+=7; // go to next vertex:
-        torVerts[j  ] = (rbend + rbar) * Math.cos(thetaStep);
-                //  x = (rbend + rbar*cos(phi==0)) * cos(theta==thetaStep)
-        torVerts[j+1] = (rbend + rbar) * Math.sin(thetaStep);
-                //  y = (rbend + rbar*cos(phi==0)) * sin(theta==thetaStep) 
-        torVerts[j+2] = 0.0;
-                //  z = -rbar  *   sin(phi==0)
-        torVerts[j+3] = 1.0;    // w
-        torVerts[j+4] = Math.random();    // random color 0.0 <= R < 1.0
-        torVerts[j+5] = Math.random();    // random color 0.0 <= G < 1.0
-        torVerts[j+6] = Math.random();    // random color 0.0 <= B < 1.0
-}
 
 function myKeyDown(ev) {
 //===============================================================================
@@ -687,5 +609,87 @@ function myKeyPress(ev) {
                         ', altKey='   +ev.altKey   +
                         ', metaKey(Command key or Windows key)='+ev.metaKey);
 }
+
+function myMouseDown(ev, gl, canvas) {
+//==============================================================================
+// Called when user PRESSES down any mouse button;
+//                  (Which button?    console.log('ev.button='+ev.button);   )
+//    ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
+//    pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+
+// Create right-handed 'pixel' coords with origin at WebGL canvas LOWER left;
+  var rect = ev.target.getBoundingClientRect(); // get canvas corners in pixels
+  var xp = ev.clientX - rect.left;                  // x==0 at canvas left edge
+  var yp = canvas.height - (ev.clientY - rect.top); // y==0 at canvas bottom edge
+//  console.log('myMouseDown(pixel coords): xp,yp=\t',xp,',\t',yp);
+  
+  // Convert to Canonical View Volume (CVV) coordinates too:
+  var x = (xp - canvas.width/2)  /    // move origin to center of canvas and
+               (canvas.width/2);      // normalize canvas to -1 <= x < +1,
+  var y = (yp - canvas.height/2) /    //                     -1 <= y < +1.
+               (canvas.height/2);
+//  console.log('myMouseDown(CVV coords  ):  x, y=\t',x,',\t',y);
+  
+  isDrag = true;                      // set our mouse-dragging flag
+  xMclik = x;                         // record where mouse-dragging began
+  yMclik = y;
+};
+
+
+function myMouseMove(ev, gl, canvas) {
+//==============================================================================
+// Called when user MOVES the mouse with a button already pressed down.
+//                  (Which button?   console.log('ev.button='+ev.button);    )
+//    ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
+//    pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+
+  if(isDrag==false) return;       // IGNORE all mouse-moves except 'dragging'
+
+  // Create right-handed 'pixel' coords with origin at WebGL canvas LOWER left;
+  var rect = ev.target.getBoundingClientRect(); // get canvas corners in pixels
+  var xp = ev.clientX - rect.left;                  // x==0 at canvas left edge
+  var yp = canvas.height - (ev.clientY - rect.top); // y==0 at canvas bottom edge
+//  console.log('myMouseMove(pixel coords): xp,yp=\t',xp,',\t',yp);
+  
+  // Convert to Canonical View Volume (CVV) coordinates too:
+  var x = (xp - canvas.width/2)  /    // move origin to center of canvas and
+               (canvas.width/2);      // normalize canvas to -1 <= x < +1,
+  var y = (yp - canvas.height/2) /    //                     -1 <= y < +1.
+               (canvas.height/2);
+//  console.log('myMouseMove(CVV coords  ):  x, y=\t',x,',\t',y);
+
+  // find how far we dragged the mouse:
+  xMdragTot += (x - xMclik);          // Accumulate change-in-mouse-position,&
+  yMdragTot += (y - yMclik);
+  xMclik = x;                         // Make next drag-measurement from here.
+  yMclik = y;
+};
+
+function myMouseUp(ev, gl, canvas) {
+//==============================================================================
+// Called when user RELEASES mouse button pressed previously.
+//                  (Which button?   console.log('ev.button='+ev.button);    )
+//    ev.clientX, ev.clientY == mouse pointer location, but measured in webpage 
+//    pixels: left-handed coords; UPPER left origin; Y increases DOWNWARDS (!)  
+
+// Create right-handed 'pixel' coords with origin at WebGL canvas LOWER left;
+  var rect = ev.target.getBoundingClientRect(); // get canvas corners in pixels
+  var xp = ev.clientX - rect.left;                  // x==0 at canvas left edge
+  var yp = canvas.height - (ev.clientY - rect.top); // y==0 at canvas bottom edge
+//  console.log('myMouseUp  (pixel coords): xp,yp=\t',xp,',\t',yp);
+  
+  // Convert to Canonical View Volume (CVV) coordinates too:
+  var x = (xp - canvas.width/2)  /    // move origin to center of canvas and
+               (canvas.width/2);      // normalize canvas to -1 <= x < +1,
+  var y = (yp - canvas.height/2) /    //                     -1 <= y < +1.
+               (canvas.height/2);
+  console.log('myMouseUp  (CVV coords  ):  x, y=\t',x,',\t',y);
+  
+  isDrag = false;                     // CLEAR our mouse-dragging flag, and
+  // accumulate any final bit of mouse-dragging we did:
+  xMdragTot += (x - xMclik);
+  yMdragTot += (y - yMclik);
+  console.log('myMouseUp: xMdragTot,yMdragTot =',xMdragTot,',\t',yMdragTot);
+};
 
    
