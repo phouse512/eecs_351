@@ -267,7 +267,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
 
 	clrColr = new Float32Array(4);
 	clrColr = gl.getParameter(gl.COLOR_CLEAR_VALUE);
-	console.log("clear value:", clrColr);
+	// console.log("clear value:", clrColr);
 	
   //-------Draw Spinning Tetrahedron
   modelMatrix.setTranslate(-0.4,-0.4, 0.0);  // 'set' means DISCARD old matrix,
@@ -319,10 +319,7 @@ function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
 	//-------------------------------
 	// Attempt 3: Quaternions? What will work better?
 
-	
-  				// YOUR CODE HERE
-  modelMatrix.scale(.5, .5, .5);
-  modelMatrix.translate(1, 0, 0, 0);
+					// YOUR CODE HERE
 
 	//-------------------------------
 	// DRAW 2 TRIANGLES:		Use this matrix to transform & draw
@@ -523,11 +520,6 @@ function myKeyDown(ev) {
   		document.getElementById('Result').innerHTML =
   			' Down Arrow:keyCode='+ev.keyCode;
   		break;
-    case 40:    // space bar
-      console.log(' space.');
-      document.getElementById('Result').innerHTML =
-        ' Down Arrow:keyCode='+ev.keyCode;
-      break;
 		default:
 			console.log('myKeyDown()--keycode=', ev.keyCode, ', charCode=', ev.charCode);
   		document.getElementById('Result').innerHTML =

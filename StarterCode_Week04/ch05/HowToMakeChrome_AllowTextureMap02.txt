@@ -1,0 +1,79 @@
+
+=======================================================
+How to get WebGL Texture Maps to work on Google Chrome 
+				(WebGL Programming Guide: Chap 5)
+=======================================================
+
+Earlier this quarter we intentionally skipped WebGL's 'texture mapping' abilities presented in Chapter 5 of our book, because:
+	--I thought it wasn't yet appropriate, and
+	--Google Chrome's default file-permission settings prohibit its use,
+	because binary (non-text) files such as images might hold malicious code.
+	While this is quite rare for image files, and all-but-impossible for the
+	image files as we use them in WebGL texture maps, Google chose safety.
+
+As we explore lighting and materials in WebGL, we should also learn about texture mapping.  In the latter part of Chapter 5, our textbook shows explains texture mapping basics and gives you real code that actually works.  After that, we can combine these simple image-to-screen textures with Chapter 8's lighting model (Phong Lighting) and use textures for other techniques such as 'bump mapping'.
+
+But first, how can we get Chrome to run this code?
+
+--One <DILIGENT_STUDENT> (anonymous) devised his own n ingenious work-around:
+convert the image to 'base64' format (characters only) and embed it directly into our JavaScript files.  This works, but expands the size of the image file by about 3X, bloats your JavaScript file with incomprehensible junk, and won't let you switch easily from one texture-image file to another.
+
+--Investigating with another <DILIGENT_STUDENT>(anonymous) we found we could add just one command-line argument when we start Google Chrome to permit its JavaScript engine to read files that reside locally on your computer.  This is a much better solution, and easy to implement: here's the argument we need:
+
+		--allow-file-access-from-files
+
+This friendly website explains all the other Chrome command line switches as well:  http://peter.sh/experiments/chromium-command-line-switches/
+
+But how can we do it?  
+You could do it from the command-line each time, but that's bothersome.
+We DON'T want to use this new argument as the default for Chrome, because it would reduce security for everyday web-browsing.  
+
+Instead, we want this argument ONLY for our CS351-1 WebGL projects: Thus we will make an 'EECS351-Chrome' shortcut that includes this argument when it starts Chrome, and use it for our coursework only.
+
+For Windows machines:
+=========================
+1) Find the command line that starts Chrome when you click on its icon:
+Start -> All Programs -> Google Chrome(folder) -> 
+	--right-click on the 'Google Chrome' icon you find there;
+	--Select 'properties'  (at bottom of pop-up context menu)
+	--At the top, in the 'ShortCut' tab,
+		--In the 'Target:' window you'll see the absolute path to the 
+			Chrome executable in quotes (something like this):
+
+	"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+
+		--Copy that text (NotePad or another simple text editor might help)
+
+2) Create a new shortcut:
+	--right-click on your desktop --> New --> ShortCut... 
+	--In the pop-up window that appears, give the Chrome location that
+		you found in the previous step (e.g. "C:\Program Files (x86)...)
+	--Press 'Next', give shortcut name (e.g. EECS 351-1 Chrome), click 'finish'
+
+3) Modify the shortcut's command-line or 'Target':
+	--Right-click on the new icon you just made: select 'Properties'
+	--At the top of the pop-up window that appears, select 'shortcut' tab.
+	--In the 'Target' edit box, you should find the location you entered 
+		earlier. Append the command-line argument there.
+	--be careful! 
+		--You must have administrator access to do this, and
+		--the appended text begins with a space, then double dash (--) and the result should look something like this):
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-fileaccess-from-files
+
+4) Use the shortcut to start Chrome, and make sure it can run Chapter 5 texture-map programs (e.g. drag-and-drop Chapter 5 HTML files to your newly-opened Chrome Browser).
+
+For Apple Machines:
+=========================
+(my ancient Mac Mini isn't WebGL capable; please test and correct this for me if there's a better way)
+
+1) Start the Terminal (apps-->utilities-->terminal).
+2) Start Chrome from the command-line of the terminal, but use the extra argument:
+
+$ open "/Applications/Google Chrome.app" --args -–allow-file-access-from-files 
+
+3) However, that's a pain to do.  Instead, here is a compressed (ZIP) file that contains all you need to make a click-able icon to access Chrome with the proper settings to allow texture mapping.
+
+
+(We found some help here: 
+http://code.google.com/p/traceur-compiler/wiki/EnlistingAndTesting
+)
