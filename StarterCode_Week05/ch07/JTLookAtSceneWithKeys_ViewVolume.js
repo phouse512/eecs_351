@@ -271,23 +271,23 @@ function draw(gl, u_ViewMatrix, viewMatrix) {
 	// CHANGE from our default viewport:
 	// gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 	// to a smaller one:
-	gl.viewport(0,  														// Viewport lower-left corner
-							0,															// (x,y) location(in pixels)
-  						gl.drawingBufferWidth/2, 				// viewport width, height.
-  						gl.drawingBufferHeight/2);
+	// gl.viewport(0,  														// Viewport lower-left corner
+	// 						0,															// (x,y) location(in pixels)
+ //  						gl.drawingBufferWidth/2, 				// viewport width, height.
+ //  						gl.drawingBufferHeight/2);
   						
-  // Set the matrix to be used for to set the camera view
-  viewMatrix.setLookAt(g_EyeX, g_EyeY, g_EyeZ, 	// eye position
-  											0, 0, 0, 								// look-at point (origin)
-  											0, 1, 0);								// up vector (+y)
+ //  // Set the matrix to be used for to set the camera view
+ //  viewMatrix.setLookAt(g_EyeX, g_EyeY, g_EyeZ, 	// eye position
+ //  											0, 0, 0, 								// look-at point (origin)
+ //  											0, 1, 0);								// up vector (+y)
 
-  // Pass the view projection matrix
-  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+ //  // Pass the view projection matrix
+ //  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
-	// Draw the scene:
-	drawMyScene(gl, u_ViewMatrix, viewMatrix);
+	// // Draw the scene:
+	// drawMyScene(gl, u_ViewMatrix, viewMatrix);
  
-    // Draw in the SECOND of several 'viewports'
+ //    // Draw in the SECOND of several 'viewports'
   //------------------------------------------
 	gl.viewport(gl.drawingBufferWidth/2, 				// Viewport lower-left corner
 							0, 															// location(in pixels)
@@ -307,21 +307,21 @@ function draw(gl, u_ViewMatrix, viewMatrix) {
     
         // Draw in the THIRD of several 'viewports'
   //------------------------------------------
-	gl.viewport(0										, 				// Viewport lower-left corner
-							gl.drawingBufferHeight/2, 		// location(in pixels)
-  						gl.drawingBufferWidth/2, 				// viewport width, height.
-  						gl.drawingBufferHeight/2);
+	// gl.viewport(0										, 				// Viewport lower-left corner
+	// 						gl.drawingBufferHeight/2, 		// location(in pixels)
+ //  						gl.drawingBufferWidth/2, 				// viewport width, height.
+ //  						gl.drawingBufferHeight/2);
 
-	// but use a different 'view' matrix:
-  viewMatrix.setLookAt(g_EyeY, g_EyeX, g_EyeZ, 	// eye position,
-  											0, 0, 0, 								// look-at point,
-  											0, 1, 0);								// 'up' vector.
+	// // but use a different 'view' matrix:
+ //  viewMatrix.setLookAt(g_EyeY, g_EyeX, g_EyeZ, 	// eye position,
+ //  											0, 0, 0, 								// look-at point,
+ //  											0, 1, 0);								// 'up' vector.
 
-  // Pass the view projection matrix to our shaders:
-  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+ //  // Pass the view projection matrix to our shaders:
+ //  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   
-	// Draw the scene:
-	drawMyScene(gl, u_ViewMatrix, viewMatrix);
+	// // Draw the scene:
+	// drawMyScene(gl, u_ViewMatrix, viewMatrix);
 }
 
 function drawMyScene(myGL, myu_ViewMatrix, myViewMatrix) {
