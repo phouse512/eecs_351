@@ -119,9 +119,9 @@ function makeSphere() {
 // equal-lattitude 'slices' of the sphere (bounded by planes of constant z), 
 // and connect them as a 'stepped spiral' design (see makeCylinder) to build the
 // sphere from one triangle strip.
-  var slices = 100;    // # of slices of the sphere along the z axis. >=3 req'd
+  var slices = 10;    // # of slices of the sphere along the z axis. >=3 req'd
                       // (choose odd # or prime# to avoid accidental symmetry)
-  var sliceVerts  = 100; // # of vertices around the top edge of the slice
+  var sliceVerts  = 10; // # of vertices around the top edge of the slice
                       // (same number of vertices on bottom of slice, too)
   var topColr = new Float32Array([0.7, 0.7, 0.7]);  // North Pole: light gray
   var equColr = new Float32Array([0.3, 0.7, 0.3]);  // Equator:    bright green
@@ -194,6 +194,8 @@ function makeSphere() {
       }
     }
   }
+
+  console.log(sphVerts);
 }
 
 function makeGroundGrid() {
@@ -332,6 +334,60 @@ function initVertexBuffers(gl) {
      1.0,  2.0, -1.0,    1.0, 1.0, 0.1,  // Node 2
   ]);
 
+squareVerts = new Float32Array([
+     1.0, -1.0, -1.0,    0.0, 1.0, 0.0,  // Node 3
+     1.0,  1.0, -1.0,    1.0, 0.0, 0.0,  // Node 2
+     1.0,  1.0,  1.0,    1.0, 0.0, 0.0,  // Node 4
+     
+     1.0,  1.0,  1.0,    1.0, 0.1, 0.1,  // Node 4
+     1.0, -1.0,  1.0,    1.0, 0.1, 0.1,  // Node 7
+     1.0, -1.0, -1.0,    1.0, 0.1, 0.1,  // Node 3
+
+    // +y face: GREEN
+    -1.0,  1.0, -1.0,    0.0, 1.0, 0.0,  // Node 1
+    -1.0,  1.0,  1.0,    0.0, 1.0, 0.0,  // Node 5
+     1.0,  1.0,  1.0,    0.0, 1.0, 0.0,  // Node 4
+
+     1.0,  1.0,  1.0,    0.1, 1.0, 0.1,  // Node 4
+     1.0,  1.0, -1.0,    0.1, 1.0, 0.1,  // Node 2 
+    -1.0,  1.0, -1.0,    0.1, 1.0, 0.1,  // Node 1
+
+    // +z face: BLUE
+    -1.0,  1.0,  1.0,    0.4, 0.3, 1.0,  // Node 5
+    -1.0, -1.0,  1.0,    0.4, 0.2, 1.0,  // Node 6
+     1.0, -1.0,  1.0,    0.2, 0.1, 1.0,  // Node 7
+
+     1.0, -1.0,  1.0,    0.4, 0.1, 1.0,  // Node 7
+     1.0,  1.0,  1.0,    0.6, 0.1, 1.0,  // Node 4
+    -1.0,  1.0,  1.0,    0.8, 0.1, 1.0,  // Node 5
+
+    // -x face: CYAN
+    -1.0, -1.0,  1.0,    0.0, 1.0, 1.0,  // Node 6 
+    -1.0,  1.0,  1.0,    0.0, 1.0, 1.0,  // Node 5 
+    -1.0,  1.0, -1.0,    0.0, 1.0, 1.0,  // Node 1
+    
+    -1.0,  1.0, -1.0,    0.1, 1.0, 1.0,  // Node 1
+    -1.0, -1.0, -1.0,    0.1, 1.0, 1.0,  // Node 0  
+    -1.0, -1.0,  1.0,    0.1, 1.0, 1.0,  // Node 6  
+    
+    // -y face: MAGENTA
+     1.0, -1.0, -1.0,    1.0, 0.0, 1.0,  // Node 3
+     1.0, -1.0,  1.0,    1.0, 0.0, 1.0,  // Node 7
+    -1.0, -1.0,  1.0,    1.0, 0.0, 1.0,  // Node 6
+
+    -1.0, -1.0,  1.0,    1.0, 0.1, 1.0,  // Node 6
+    -1.0, -1.0, -1.0,    1.0, 0.1, 1.0,  // Node 0
+     1.0, -1.0, -1.0,    1.0, 0.1, 1.0,  // Node 3
+
+     // -z face: YELLOW
+     1.0,  1.0, -1.0,    1.0, 1.0, 0.0,  // Node 2
+     1.0, -1.0, -1.0,    1.0, 1.0, 0.0,  // Node 3
+    -1.0, -1.0, -1.0,    1.0, 1.0, 0.0,  // Node 0   
+
+    -1.0, -1.0, -1.0,    1.0, 1.0, 0.1,  // Node 0
+    -1.0,  1.0, -1.0,    1.0, 1.0, 0.1,  // Node 1
+     1.0,  1.0, -1.0,    1.0, 1.0, 0.1,  // Node 2
+  ]);
 
   rocketVerts = new Float32Array([
       1, 0,  1,      1.0, .1, 0.0, // node 0
@@ -421,7 +477,7 @@ function initVertexBuffers(gl) {
 
 	// How much space to store all the shapes in one array?
 	// (no 'var' means this is a global variable)
-	mySiz = forestVerts.length + gndVerts.length + lineVerts.length + rectangleVerts.length + rocketVerts.length + halfPyramidVerts.length + sphVerts.length;
+	mySiz = forestVerts.length + gndVerts.length + lineVerts.length + rectangleVerts.length + rocketVerts.length + halfPyramidVerts.length + sphVerts.length + squareVerts.length;
 
 	// How many vertices total?
 	var nn = mySiz / floatsPerVertex;
@@ -458,7 +514,10 @@ function initVertexBuffers(gl) {
   for(j=0; j < sphVerts.length; i++,j++) {
     verticesColors[i] = sphVerts[j];
   }
-
+  squarestart = i;
+  for(j=0; j < squareVerts.length; i++,j++) {
+    verticesColors[i] = squareVerts[j];
+  }
   console.log(linestart);
   // Create a buffer object
   var vertexColorbuffer = gl.createBuffer();  
@@ -494,6 +553,9 @@ function initVertexBuffers(gl) {
 
 var g_EyeX = 0.20, g_EyeY = 0.25, g_EyeZ = 4.25; 
 var g_LookAtX = .2, g_LookAtY = .25, g_LookAtZ = 0;
+var g_near = 0.0, g_far = 100;
+var g_left = -1, g_right = 1;
+var g_top = -1, g_bottom = 1;
 // Global vars for Eye position. 
 // NOTE!  I moved eyepoint BACKWARDS from the forest: from g_EyeZ=0.25
 // a distance far enough away to see the whole 'forest' of trees within the
@@ -540,6 +602,12 @@ function keydown(ev, gl, currentAngle, u_ViewMatrix, viewMatrix, u_ProjMatrix, p
       g_LookAtX += unit_X*move_distance;
       g_EyeY += unit_Y*move_distance;
       g_LookAtY += unit_Y*move_distance;
+      g_far -= .5;
+      g_near -= .5;
+      g_left += .1;
+      g_right -= .1;
+      g_top += .1;
+      g_bottom -= .1;
     } else
     if (ev.keyCode == 40) {
       g_EyeZ -= unit_Z*move_distance;
@@ -548,11 +616,17 @@ function keydown(ev, gl, currentAngle, u_ViewMatrix, viewMatrix, u_ProjMatrix, p
       g_LookAtX -= unit_X*move_distance;
       g_EyeY -= unit_Y*move_distance;
       g_LookAtY -= unit_Y*move_distance;
+      g_far += .5;
+      g_near += .5;
+      g_left -= .1;
+      g_right += .1;
+      g_top -= .1;
+      g_bottom += .1;
     } else
     if (ev.keyCode == 65) {
       // 'a' keypress, turn left
       //turn left 5 degrees
-      degrees = 7;
+      degrees = 4;
 
       newVectorX = look_vectorX*Math.cos(toRadians(degrees)) - look_vectorZ*Math.sin(toRadians(degrees));
       newVectorZ = look_vectorX*Math.sin(toRadians(degrees)) + look_vectorZ*Math.cos(toRadians(degrees));
@@ -564,7 +638,7 @@ function keydown(ev, gl, currentAngle, u_ViewMatrix, viewMatrix, u_ProjMatrix, p
     if (ev.keyCode == 68) {
       // 'd' keypress, look right
       //turn right -5
-      degrees = -7;
+      degrees = -4;
 
       newVectorX = look_vectorX*Math.cos(toRadians(degrees)) - look_vectorZ*Math.sin(toRadians(degrees));
       newVectorZ = look_vectorX*Math.sin(toRadians(degrees)) + look_vectorZ*Math.cos(toRadians(degrees));
@@ -597,69 +671,72 @@ function draw(gl, currentAngle, u_ViewMatrix, viewMatrix, u_ProjMatrix, projMatr
 
   // Using OpenGL/ WebGL 'viewports':
   // these determine the mapping of CVV to the 'drawing context',
-	// (for WebGL, the 'gl' context describes how we draw inside an HTML-5 canvas)
-	// Details? see
-	//
+  // (for WebGL, the 'gl' context describes how we draw inside an HTML-5 canvas)
+  // Details? see
+  //
   //  https://www.khronos.org/registry/webgl/specs/1.0/#2.3
   // Draw in the FIRST of several 'viewports'
   //------------------------------------------
-	// CHANGE from our default viewport:
-	// gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-	// to a smaller one:
-	// gl.viewport(0,  														// Viewport lower-left corner
-	// 						0,															// (x,y) location(in pixels)
- //  						gl.drawingBufferWidth/2, 				// viewport width, height.
- //  						gl.drawingBufferHeight/2);
-  						
+  // CHANGE from our default viewport:
+  // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+  // to a smaller one:
+  // gl.viewport(0,                             // Viewport lower-left corner
+  //            0,                              // (x,y) location(in pixels)
+ //             gl.drawingBufferWidth/2,        // viewport width, height.
+ //             gl.drawingBufferHeight/2);
+              
  //  // Set the matrix to be used for to set the camera view
- //  viewMatrix.setLookAt(g_EyeX, g_EyeY, g_EyeZ, 	// eye position
- //  											0, 0, 0, 								// look-at point (origin)
- //  											0, 1, 0);								// up vector (+y)
+ //  viewMatrix.setLookAt(g_EyeX, g_EyeY, g_EyeZ,   // eye position
+ //                       0, 0, 0,                // look-at point (origin)
+ //                       0, 1, 0);               // up vector (+y)
 
  //  // Pass the view projection matrix
  //  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
-	// // Draw the scene:
-	// drawMyScene(gl, u_ViewMatrix, viewMatrix);
+  // // Draw the scene:
+  // drawMyScene(gl, u_ViewMatrix, viewMatrix);
  
  //    // Draw in the SECOND of several 'viewports'
   //------------------------------------------
-	gl.viewport(gl.drawingBufferWidth/2, 				// Viewport lower-left corner
-							0, 															// location(in pixels)
-  						gl.drawingBufferWidth/2, 				// viewport width, height.
-  						gl.drawingBufferHeight/2);
+  gl.viewport(gl.drawingBufferWidth/2,        // Viewport lower-left corner
+              0,                              // location(in pixels)
+              gl.drawingBufferWidth/2,        // viewport width, height.
+              gl.drawingBufferHeight);
 
-	// but use a different 'view' matrix:
+  // but use a different 'view' matrix:
   viewMatrix.setLookAt(-g_EyeX, g_EyeY, g_EyeZ, // eye position
-  										-g_LookAtX, g_LookAtY, g_LookAtZ, 									// look-at point 
-  										0, 1, 0);									// up vector
+                      -g_LookAtX, g_LookAtY, g_LookAtZ,                   // look-at point 
+                      0, 1, 0);                 // up vector
   projMatrix.setPerspective(30, 1, 1, 100);
   // Pass the view projection matrix to our shaders:
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
-	// Draw the scene:
-	drawMyScene(gl, currentAngle, u_ViewMatrix, viewMatrix);
+  // Draw the scene:
+  drawMyScene(gl, currentAngle, u_ViewMatrix, viewMatrix);
     
         // Draw in the THIRD of several 'viewports'
   //------------------------------------------
-	gl.viewport(0										, 				// Viewport lower-left corner
-							gl.drawingBufferHeight/2, 		// location(in pixels)
-  						gl.drawingBufferWidth/2, 				// viewport width, height.
-  						gl.drawingBufferHeight/2);
+  gl.viewport(0                   ,         // Viewport lower-left corner
+              0,    // location(in pixels)
+              gl.drawingBufferWidth/2,        // viewport width, height.
+              gl.drawingBufferHeight);
 
-	// but use a different 'view' matrix:
+  // but use a different 'view' matrix:
   viewMatrix.setLookAt(-g_EyeX, g_EyeY, g_EyeZ, // eye position
                       -g_LookAtX, g_LookAtY, g_LookAtZ,                   // look-at point 
                       0, 1, 0);   
+  projMatrix.setPerspective(90, 1, 1, 100);
+  projMatrix.setOrtho(g_left, g_right, g_top, g_bottom, g_near, g_far);
 
 
   // Pass the view projection matrix to our shaders:
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+  gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);   
 
   
-	// Draw the scene:
-	drawOrthoMyScene(gl, u_ViewMatrix, viewMatrix, u_ProjMatrix, projMatrix);
+  // Draw the scene:
+  drawMyScene(gl, currentAngle, u_ViewMatrix, viewMatrix);
 }
 
 function drawMyScene(myGL, currentAngle, myu_ViewMatrix, myViewMatrix) {
@@ -671,14 +748,7 @@ function drawMyScene(myGL, currentAngle, myu_ViewMatrix, myViewMatrix) {
 	// DON'T clear <canvas> or you'll WIPE OUT what you drew 
 	// in all previous viewports!
 	// myGL.clear(gl.COLOR_BUFFER_BIT);  						
-  myViewMatrix.translate(0.0,1, 0);
-
-  // Draw the 'forest' in the current 'world' coord system:
-  myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
-
-  myGL.drawArrays(myGL.TRIANGLES,         // use this drawing primitive, and
-                forestStart/floatsPerVertex,  // start at this vertex number, and
-                forestVerts.length/floatsPerVertex);  // draw this many vertices.
+// draw this many vertices.
 
   myViewMatrix.translate(4, 0, -7);
 
@@ -733,7 +803,7 @@ function drawMyScene(myGL, currentAngle, myu_ViewMatrix, myViewMatrix) {
 
 
   myViewMatrix.translate(-2, 0, 20);
-    myViewMatrix.scale(1, 1,1);
+    myViewMatrix.scale(2,2,2);
   //myViewMatrix.rotate(currentAngle, 1, 0, 0);
   myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
 
@@ -744,62 +814,31 @@ function drawMyScene(myGL, currentAngle, myu_ViewMatrix, myViewMatrix) {
 
   //myViewMatrix.rotate(90, 0, 1, 1);
   
-  myViewMatrix.translate(Math.cos(toRadians(currentAngle))*2, Math.sin(toRadians(currentAngle))*2, 0);
-  myViewMatrix.scale(.5,.5,.5);
+  myViewMatrix.translate(Math.cos(toRadians(currentAngle))*4, Math.sin(toRadians(currentAngle))*4, 0);
+  myViewMatrix.scale(.8,.8,.8);
   myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
   myGL.drawArrays(myGL.TRIANGLES,
                 spherestart/floatsPerVertex,
                 sphVerts.length/floatsPerVertex);
 
 
+  myViewMatrix.translate(Math.sin(toRadians(currentAngle*3))*2, Math.cos(toRadians(currentAngle*3))*2, 0);
   myViewMatrix.scale(.5,.5,.5);
-  myViewMatrix.translate(Math.sin(toRadians(currentAngle))*2, Math.cos(toRadians(currentAngle))*2, 0);
   myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
   myGL.drawArrays(myGL.TRIANGLES,
-                rectanglestart/floatsPerVertex,
-                rectangleVerts.length/floatsPerVertex);
+                spherestart/floatsPerVertex,
+                sphVerts.length/floatsPerVertex);
 
+  myViewMatrix.scale(1,1,1);
 
+  // myViewMatrix.setTranslate(1,1,1);
+  // myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
+  // myGL.drawArrays(myGL.TRIANGLES,
+  //               squarestart/floatsPerVertex,
+  //               squareVerts.length/floatsPerVertex);
 }
 
-function drawOrthoMyScene(myGL, myu_ViewMatrix, myViewMatrix, myu_ProjMatrix, myprojMatrix) {
-//===============================================================================
-// Called ONLY from within the 'draw()' function
-// Assumes already-correctly-set View matrix and Proj matrix; 
-// draws all items in 'world' coords.
 
-  // DON'T clear <canvas> or you'll WIPE OUT what you drew 
-  // in all previous viewports!
-  // myGL.clear(gl.COLOR_BUFFER_BIT);   
-
-  myprojMatrix.setOrtho(-1, 1, -1, 1, 0, 100);
-  myGL.uniformMatrix4fv(myu_ProjMatrix, false, myprojMatrix.elements);          
-  
-  //myGL.drawArrays(myGL.LINES, )
-  // Draw the 'forest' in the current 'world' coord system:
-  // (where +y is 'up', as defined by our setLookAt() function call above...)
-  myGL.drawArrays(myGL.TRIANGLES,         // use this drawing primitive, and
-                forestStart/floatsPerVertex,  // start at this vertex number, and
-                forestVerts.length/floatsPerVertex);  // draw this many vertices.
-  
- // Rotate to make a new set of 'world' drawing axes: 
- // old one had "+y points upwards", but
-  myViewMatrix.rotate(-90, 1,0,0);  // new one has "+z points upwards",
-                                      // made by rotating -90 deg on +x-axis.
-                                      // Move those new drawing axes to the 
-                                      // bottom of the trees:
-  myViewMatrix.translate(0.0, 0.0, -0.6);
-
-  myViewMatrix.scale(0.4, 0.4,0.4);   // shrink the drawing axes 
-                                      //for nicer-looking ground-plane, and
-  // Pass the modified view matrix to our shaders:
-  myGL.uniformMatrix4fv(myu_ViewMatrix, false, myViewMatrix.elements);
-  
-  // Now, using these drawing axes, draw our ground plane: 
-  myGL.drawArrays(myGL.LINES,             // use this drawing primitive, and
-                gndStart/floatsPerVertex, // start at this vertex number, and
-                gndVerts.length/floatsPerVertex);   // draw this many vertices
-}
 
 // Last time that this function was called:  (used for animation timing)
 var g_last = Date.now();
@@ -819,6 +858,6 @@ function animate(angle) {
 //  if(angle < -120.0 && ANGLE_STEP < 0) ANGLE_STEP = -ANGLE_STEP;
 
   var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
-  console.log(newAngle);
+  //console.log(newAngle);
   return newAngle;
 }

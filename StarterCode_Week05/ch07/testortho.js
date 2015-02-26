@@ -150,7 +150,7 @@ function keydown(ev, gl, n, u_ProjMatrix, projMatrix, nf) {
 
 function draw(gl, n, u_ProjMatrix, projMatrix, nf) {
   // Specify the viewing volume
-  projMatrix.setOrtho(g_left, g_right, g_bottom, g_top, g_near, g_far);
+  //viewMatrix
   //projMatrix.setPerspective(30, 500/400,1, 100);
   // Pass the projection matrix to u_ProjMatrix
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
