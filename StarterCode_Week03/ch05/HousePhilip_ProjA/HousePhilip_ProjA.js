@@ -501,7 +501,7 @@ function animate(angle) {
     translate += .01;
   }
   if(translate > 0 && !press) {
-    translate -= .01;
+    translate -= .015;
   }
 
   if (translate <= 0) {

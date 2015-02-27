@@ -121,9 +121,9 @@ function makeSphere() {
 // equal-lattitude 'slices' of the sphere (bounded by planes of constant z), 
 // and connect them as a 'stepped spiral' design (see makeCylinder) to build the
 // sphere from one triangle strip.
-  var slices = 10;    // # of slices of the sphere along the z axis. >=3 req'd
+  var slices = 20;    // # of slices of the sphere along the z axis. >=3 req'd
                       // (choose odd # or prime# to avoid accidental symmetry)
-  var sliceVerts  = 10; // # of vertices around the top edge of the slice
+  var sliceVerts  = 20; // # of vertices around the top edge of the slice
                       // (same number of vertices on bottom of slice, too)
   var topColr = new Float32Array([0.7, 0.7, 0.7]);  // North Pole: light gray
   var equColr = new Float32Array([0.3, 0.7, 0.3]);  // Equator:    bright green
