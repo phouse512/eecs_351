@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Phil House Project C</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+  </head>
+
+  <body onload="main()">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 col-sm-10">
+        <canvas id="webgl" width="1000" height="800">
+        Please use a browser that supports "canvas"
+        </canvas>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <h6>Current light position: <span id="light-position"></span></h6>
+        <h6>Change light position:</h6>
+        <input class="form-control" type="text" id="lampX" placeholder="new x"/>
+        <input class="form-control" type="text" id="lampY" placeholder="new y"/>
+        <input class="form-control" type="text" id="lampZ" placeholder="new z"/>
+        <button id="change" class="btn btn-block btn-primary">Change light position</button>
+
+        <h6>Current player position: <span id="player-position"></span></h6>
+
+        <h6>Up Arrow - Move forward in the direction that you're currently looking<h6>
+        h6>Down Arrow - Move backward in the direction that you're currently looking<h6>
+        <h6>Left Arrow - Move left perpendicular to the direction you're looking in</h6>
+        <h6>Right Arrow - Move right perpendicular to the direction you're looking in</h6>
+
+        <h6>W - look up<h6>
+        <h6>S - look down<h6>
+        <h6>A - turn left<h6>
+        <h6>D - turn right<h6>
+        <h6>R - move in the z+ direction (vertical)<h6>
+        <h6>F - move in the z- direction (vertical)<h6>
+
+      </div>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="HousePhilip_ProjC.js"></script>
+  </body>
+</html>

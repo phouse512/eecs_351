@@ -4,6 +4,8 @@ var g_near = 0.0, g_far = 100;
 var g_left = -1, g_right = 1;
 var g_top = -1, g_bottom = 1;
 var rocket_height = 0;
+
+var lamp0_X = 10.0, lamp0_Y = -10.0, lamp0_Z = 10.0;
 press = false;
 
 //23456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_
@@ -245,23 +247,22 @@ function keydown(ev, gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix
       press = true;
     }
 
-    if(ev.keyCode == 39) { // The right arrow key was pressed
-        g_EyeX -= 0.2;    // INCREASED for perspective camera)
-        g_LookAtX -= 0.2;
+    if(ev.keyCode == 37) { // The right arrow key was pressed
+        g_EyeY -= 0.2;    // INCREASED for perspective camera)
+        g_LookAtY -= 0.2;
     } else 
-    if (ev.keyCode == 37) { // The left arrow key was pressed
-        g_EyeX += 0.2;    // INCREASED for perspective camera)
-        g_LookAtX += 0.2;
+    if (ev.keyCode == 39) { // The left arrow key was pressed
+        g_EyeY += 0.2;    // INCREASED for perspective camera)
+        g_LookAtY += 0.2;
     } else
     if (ev.keyCode == 82) {  // 'r' key has been pressed - move up
-        g_EyeY += .2;
-        g_LookAtY += .2;
+        g_EyeZ += .2;
+        g_LookAtZ += .2;
     } else
     if (ev.keyCode == 70) { // 'f' key has been pressed - move down
-      if (g_EyeY >= -6){
-        g_EyeY -= .2;
-        g_LookAtY -= 0.2;
-      }
+      g_EyeZ -= .2;
+      g_LookAtZ -= 0.2;
+      
     } else
     if (ev.keyCode == 38) {
       g_EyeZ += unit_Z*move_distance;
@@ -291,7 +292,7 @@ function keydown(ev, gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix
       g_top -= .1;
       g_bottom += .1;
     } else
-    if (ev.keyCode == 65) {
+    if (ev.keyCode == 87) {
       // 'a' keypress, turn left
       //turn left 5 degrees
       degrees = 4;
@@ -303,7 +304,7 @@ function keydown(ev, gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix
       g_LookAtZ = newVectorZ + g_EyeZ;
 
     } else
-    if (ev.keyCode == 68) {
+    if (ev.keyCode == 83) {
       // 'd' keypress, look right
       //turn right -5
       degrees = -4;
@@ -314,11 +315,11 @@ function keydown(ev, gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix
       g_LookAtX = newVectorX + g_EyeX;
       g_LookAtZ = newVectorZ + g_EyeZ;
     } else
-    if (ev.keyCode == 87) {
+    if (ev.keyCode == 68) {
       // 'w' keypress, look up action
       g_LookAtY += .2;
     } else 
-    if (ev.keyCode == 83) {
+    if (ev.keyCode == 65) {
       // 's' keypress, look down action
       g_LookAtY -= .2;
     } else { return; } // Prevent the unnecessary drawing
@@ -329,12 +330,34 @@ function toRadians (angle) {
   return angle * (Math.PI / 180);
 }
 
+function submitLightPosition() {
+  new_lightX = parseFloat($("#lampX").val());
+  new_lightY = parseFloat($("#lampY").val());
+  new_lightZ = parseFloat($("#lampZ").val());
+
+  console.log(new_lightX);
+
+  if(!isNaN(new_lightX)  && !isNaN(new_lightY) && !isNaN(new_lightZ)) {
+    lamp0_X = new_lightX;
+    lamp0_Y = new_lightY;
+    lamp0_Z = new_lightZ;
+  }
+}
+
+$(document).ready(function(){
+  $("#change").on('click', function(e){
+    e.preventDefault();
+    submitLightPosition();
+  })
+});
+
 function draw(gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix, u_MvpMatrix, mvpMatrix, u_NormalMatrix, normalMatrix, u_Lamp0Pos, u_Lamp0Amb, u_Lamp0Diff, u_Lamp0Spec, u_Lamp1Pos, u_Lamp1Amb, u_Lamp1Diff, u_Lamp1Spec, u_Ke, u_Ka, u_Kd, u_Ks, canvasWidth, canvasHeight, n) {
 
 
-
+  $("#light-position").html("(" + lamp0_X + ", " + lamp0_Y + ", " + lamp0_Z + ")");
+  $("#player-position").html("(" + -g_EyeX + ", " + g_EyeY + ", " + g_EyeZ + ")")
     // Position the first light source in World coords: 
-  gl.uniform4f(u_Lamp0Pos, 10.0, -10.0, 10.0, 1.0);
+  gl.uniform4f(u_Lamp0Pos, lamp0_X, lamp0_Y, lamp0_Z, 1.0);
   // Set its light output:  
   gl.uniform3f(u_Lamp0Amb,  .4, 0.4, 0.4);   // ambient
   gl.uniform3f(u_Lamp0Diff, 1,1,1);   // diffuse
@@ -355,15 +378,16 @@ function draw(gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix, u_Mvp
 //  gl.uniform1i(u_Kshiny, 4);              // Kshiny shinyness exponent
 	
   // Calculate the model matrix
-  modelMatrix.setRotate(90, 0, 1, 0); // Rotate around the y-axis
+  modelMatrix.setRotate(-90, 0,0, 1); // Rotate around the y-axis
+  //modelMatrix.setRotate(90, )
   // Calculate the view projection matrix
   mvpMatrix.setPerspective(30, canvasWidth/canvasHeight, 1, 100);
   //mvpMatrix.lookAt(	-g_EyeX, g_EyeY, g_EyeZ, 				// eye pos (in world coords)
   //									-g_LookAtX, g_LookAtY, g_LookAtZ, 				// aim-point (in world coords)
 	//								  0,  0, 1);				// up (in world coords)
 
-  mvpMatrix.lookAt(6, 0, 0,
-                  0, 0, 0,
+  mvpMatrix.lookAt(-g_EyeX, g_EyeY, g_EyeZ,
+                  -g_LookAtX, g_LookAtY, g_LookAtZ,
                   0, 0, 1);
   mvpMatrix.multiply(modelMatrix);
   // Calculate the matrix to transform the normal based on the model matrix
@@ -390,11 +414,29 @@ function draw(gl, currentAngle, u_eyePosWorld, u_ModelMatrix, modelMatrix, u_Mvp
   // Draw the cube
   gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0);
 
-  mvpMatrix.translate(0, Math.cos(toRadians(currentAngle*3))*2, Math.sin(toRadians(currentAngle*3))*2);
+
+    gl.uniform3f(u_Ke, 0.0, 0.0, 0.0);        // Ke emissive
+  gl.uniform3f(u_Ka, 0,0, .4);        // Ka ambient
+  gl.uniform3f(u_Kd, 0.0, 0.5, 0.0);        // Kd diffuse
+  gl.uniform3f(u_Ks, .8, 0.8, 0.8);     
+
+  mvpMatrix.translate(Math.sin(toRadians(currentAngle*3))*3, Math.cos(toRadians(currentAngle*3))*3, 0);
   mvpMatrix.scale(.4,.4,.4);
   gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0);
+
+  mvpMatrix.translate(0, -Math.cos(toRadians(currentAngle*3))*2, Math.sin(toRadians(currentAngle*3))*2);
+  mvpMatrix.scale(.6,.6,.6);
+  gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+
+      gl.uniform3f(u_Ke, 0.0, 0.0, 0.0);        // Ke emissive
+  gl.uniform3f(u_Ka, 0,0, .4);        // Ka ambient
+  gl.uniform3f(u_Kd, 0.0, 0.1, 0.6);        // Kd diffuse
+  gl.uniform3f(u_Ks, .8, 0.8, 0.8);   
 
   gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0);
+
+
 
 }
 
@@ -493,7 +535,7 @@ function animate(angle) {
   var elapsed = now - g_last;
   g_last = now;
 
-  console.log(angle);
+  //console.log(angle);
 
   var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
 
